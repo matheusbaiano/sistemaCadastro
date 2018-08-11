@@ -1,0 +1,38 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Cadastrar Usuário</ui:define>
+
+	<ui:define name="corpo">
+	<h:form id="frm">
+		<p:ajaxStatus styleClass="ajax-status">
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	
+		<p:messages autoUpdate="true" />
+	
+		<p:panelGrid columns="2">
+			<p:outputLabel value="Login" for="login" />
+			<p:inputText id="login" value="#{cadastroUsuarioBean.login}" required="true">
+				<p:ajax listener="#{cadastroUsuarioBean.verificarDisponibilidadeLogin}" 
+					event="change" process="@this" />
+			</p:inputText>
+		
+			<p:outputLabel value="Senha" for="senha" />
+			<p:password id="senha" value="#{cadastroUsuarioBean.senha}" match="confsenha" required="true"/>
+			
+			<p:outputLabel value="Confirmar Senha" for="confsenha" />
+			<p:password id="confsenha" value="#{cadastroUsuarioBean.senha}" required="true"/>
+		</p:panelGrid>
+		
+		<p:commandButton value="Cadastrar" action="#{cadastroUsuarioBean.cadastrar}" update="@form"/>
+	</h:form>
+	</ui:define>
+
+</ui:composition>

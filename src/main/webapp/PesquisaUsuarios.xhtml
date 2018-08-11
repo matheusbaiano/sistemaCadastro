@@ -1,0 +1,122 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="titulo">Pesquisa de usuarios</ui:define>
+
+	<ui:define name="corpo">
+		<h:form id="frmPesquisa">
+			<h1>Pesquisa de usuários</h1>
+			
+			<p:messages id="msgFrmPesquisa" closable="true" />
+
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:commandButton value="Pesquisar"
+						action="#{pesquisaUsuariosBean.pesquisar}" update="@form" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					
+					<p:commandButton value="Novo" oncomplete="PF('dialogCadastrar').show()" process="@this"
+						update=":cadastrarDialog"/>
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:panelGrid columns="2" id="painel"
+				style="width: 100%; margin-top: 20px" columnClasses="rotulo, campo">
+				<p:outputLabel value="Nome" for="nome" />
+				<p:inputText id="nome" size="60"
+					value="#{pesquisaUsuariosBean.filtro.nome}" />
+			</p:panelGrid>
+
+			<p:dataTable id="usuariosTable" var="usuario"
+				value="#{pesquisaUsuariosBean.usuariosFiltrados}"
+				style="margin-top: 20px" emptyMessage="Nenhum usuario encontrado."
+				rows="20" paginator="true" paginatorAlwaysVisible="false"
+				paginatorPosition="bottom">
+				<f:facet name="header">
+            		Usuários
+        		</f:facet>
+				<p:column headerText="Nome">
+					<h:outputText value="#{usuario.nomeUsuario}" />
+				</p:column>
+				<p:column style="width: 100px; text-align: center" headerText="Opção">
+					<p:commandButton icon="ui-icon-pencil" title="Editar"
+						oncomplete="PF('dialogEditar').show()" process="@this"
+						update=":editarDialog">
+						<f:setPropertyActionListener
+							target="#{pesquisaUsuariosBean.usuarioSelecionado}"
+							value="#{usuario}" />
+					</p:commandButton>
+
+					<p:commandButton icon="ui-icon-trash" title="Excluir"
+						oncomplete="PF('confirmacaoExclusao').show()" process="@this"
+						update=":frmPesquisa:confirmacaoExclusaoDialog">
+						<f:setPropertyActionListener
+							target="#{pesquisaUsuariosBean.usuarioSelecionado}"
+							value="#{usuario}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+
+			<p:confirmDialog header="Exclusão de usuário"
+				message="Tem certeza que deseja excluir o usuario #{pesquisaUsuariosBean.usuarioSelecionado.nomeUsuario}?"
+				widgetVar="confirmacaoExclusao" id="confirmacaoExclusaoDialog">
+				<p:button value="Não"
+					onclick="PF('confirmacaoExclusao').hide(); return false;" />
+				<p:commandButton value="Sim"
+					oncomplete="PF('confirmacaoExclusao').hide();"
+					action="#{pesquisaUsuariosBean.excluir}" process="@this"
+					update="@form" id="yesButton" />
+			</p:confirmDialog>
+
+		</h:form>
+		
+		<p:dialog header="Editar usuário" widgetVar="dialogEditar" id="editarDialog" 
+			hideEffect="explode">
+			<h:form id="formEditar">
+				<p:growl id="growl" showDetail="true" sticky="true" />
+							
+				<p:panelGrid columns="2">
+					<p:outputLabel value="Login" for="nomeUsuario" />
+					<p:inputText id="nomeUsuario" value="#{pesquisaUsuariosBean.usuarioSelecionado.nomeUsuario}" required="true" disabled="true">
+					</p:inputText>
+				
+					<p:outputLabel value="Senha" for="senha" />
+					<p:password id="senha" value="#{pesquisaUsuariosBean.usuarioSelecionado.senha}" match="confsenha" required="true"/>
+					
+					<p:outputLabel value="Confirmar Senha" for="confsenha" />
+					<p:password id="confsenha" value="#{pesquisaUsuariosBean.usuarioSelecionado.senha}" required="true"/>
+				</p:panelGrid>
+				<p:button value="Voltar" onclick="PF('dialogEditar').hide(); return false;" />				
+				<p:commandButton value="Salvar" oncomplete="if (!args.validationFailed){PF('dialogEditar').hide()}" action="#{pesquisaUsuariosBean.salvar}" update="growl "/>
+			</h:form>
+		</p:dialog>
+		
+		<p:dialog header="Cadastrar usuário" widgetVar="dialogCadastrar" id="cadastrarDialog" hideEffect="explode">
+			<h:form id="formCadastrar">
+				<p:messages autoUpdate="true" />
+	
+				<p:panelGrid columns="2">
+					<p:outputLabel value="Login" for="login" />
+					<p:inputText id="login" value="#{cadastroUsuarioBean.login}" required="true">
+						<p:ajax listener="#{cadastroUsuarioBean.verificarDisponibilidadeLogin}" 
+							event="change" process="@this" />
+					</p:inputText>
+				
+					<p:outputLabel value="Senha" for="cadSenha" />
+					<p:password id="cadSenha" value="#{cadastroUsuarioBean.senha}" match="confirmarsenha" required="true"/>
+					
+					<p:outputLabel value="Confirmar Senha" for="confirmarsenha" />
+					<p:password id="confirmarsenha" value="#{cadastroUsuarioBean.senha}" required="true"/>
+				</p:panelGrid>
+				<p:button value="Voltar" onclick="PF('dialogCadastrar').hide(); return false;" />
+				<p:commandButton value="Cadastrar" action="#{cadastroUsuarioBean.cadastrar}" update="@form"/>
+			</h:form>
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>
