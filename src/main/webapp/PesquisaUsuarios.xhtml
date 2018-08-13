@@ -5,7 +5,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 	<ui:define name="titulo">Pesquisa de usuarios</ui:define>
-
+	
 	<ui:define name="corpo">
 		<h:form id="frmPesquisa">
 			<h1>Pesquisa de usuários</h1>
@@ -76,7 +76,7 @@
 		</h:form>
 		
 		<p:dialog header="Editar usuário" widgetVar="dialogEditar" id="editarDialog" 
-			hideEffect="explode">
+			hideEffect="explode" modal="true">
 			<h:form id="formEditar">
 				<p:growl id="growl" showDetail="true" sticky="true" />
 							
@@ -96,7 +96,7 @@
 			</h:form>
 		</p:dialog>
 		
-		<p:dialog header="Cadastrar usuário" widgetVar="dialogCadastrar" id="cadastrarDialog" hideEffect="explode">
+		<p:dialog header="Cadastrar usuário" widgetVar="dialogCadastrar" id="cadastrarDialog" hideEffect="explode" modal="true">
 			<h:form id="formCadastrar">
 				<p:messages autoUpdate="true" />
 	

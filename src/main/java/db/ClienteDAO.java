@@ -99,8 +99,9 @@ public class ClienteDAO {
 	
 	public void remover(Cliente cliente) {
 			cliente = porId(cliente.getId());
+			manager.getTransaction().begin();
 			manager.remove(cliente);
-			manager.flush();
+			manager.getTransaction().commit();
 	}
 	
 

@@ -31,7 +31,7 @@
 		<h:form style="display: inline-block">
 			<p:menubar styleClass="menu-sistema">
 				<p:submenu label="Cadastros">
-					<p:menuitem value="Clientes" />
+					<p:menuitem value="Clientes" outcome="PesquisaClientes" onclick="pesquisaClientesBean.limpar" />
 					<p:menuitem value="Usuários" outcome="PesquisaUsuarios" />
 					<p:separator />
 					<p:menuitem value="Produtos" />

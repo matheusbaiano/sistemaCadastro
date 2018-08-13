@@ -19,13 +19,13 @@
 	    				update="@form" />
 	    		</p:toolbarGroup>
 	    		<p:toolbarGroup align="right">
-	    			<p:button value="Novo" outcome="CadastroCliente" />
+	    			<p:button value="Novo" outcome="CadastroCliente"  onclick="#{cadastroClientesBean.limpar}"/>
 	    		</p:toolbarGroup>
 	    	</p:toolbar>
 	    	
 	    	<p:panelGrid columns="2" id="painel" style="width: 100%; margin-top: 20px"
 	    			columnClasses="rotulo, campo">
-	    		<p:outputLabel value="CPF/CNPJ" for="docReceitaFederal"/>
+	    		<p:outputLabel value="CPF" for="docReceitaFederal"/>
 	    		<p:inputText id="docReceitaFederal" size="20" value="#{pesquisaClientesBean.filtro.cpf}" />
 	    		
 	    		<p:outputLabel value="Nome" for="nome"/>
@@ -35,24 +35,35 @@
 	    	<p:dataTable id="clientesTable" value="#{pesquisaClientesBean.clientesFiltrados}" var="cliente"
 	    		style="margin-top: 20px" emptyMessage="Nenhum cliente encontrado." rows="20"
 	    		paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom">
-	    		
+
 	    		<p:column headerText="Nome">
 	    			<h:outputText value="#{cliente.nome}" />
 	    		</p:column>
-	    		<p:column headerText="Tipo" style="width: 250px">
-	    			<h:outputText value="#{cliente.tipo.descricao}"/>
+	    		<p:column headerText="E-mail" style="width: 250px">
+	    			<h:outputText value="#{cliente.email}"/>
 	    		</p:column>
 	    		<p:column headerText="CPF" style="width: 300px">
-	    			<h:outputText value="#{cliente.documentoReceitaFederal}"/>
+	    			<h:outputText converter="cpfMask" value="#{cliente.cpf}"/>
 	    		</p:column>
 	    		
 	    		<p:column style="width: 100px; text-align: center">
-	    			<p:button outcome="CadastroCliente" icon="ui-icon-pencil" title="Editar">
-	    				<f:param name="cliente" value="#{cliente.id}" />
-	    			</p:button>
+	    			<p:commandButton icon="ui-icon-search" title="Exibir"
+						oncomplete="PF('cliDialog').show()" process="@this"
+						update=":frmPesquisa:clienteDialog">
+						<f:setPropertyActionListener
+							target="#{pesquisaClientesBean.clienteSelecionado}"
+							value="#{cliente}" />
+					</p:commandButton>
+	    			<p:commandButton icon="ui-icon-pencil" title="Editar"
+						oncomplete="PF('dialogEditar').show()" process="@this"
+						update=":editarDialog">
+						<f:setPropertyActionListener
+							target="#{pesquisaClientesBean.clienteSelecionado}"
+							value="#{cliente}" />
+					</p:commandButton>
 	    			<p:commandButton icon="ui-icon-trash" title="Excluir" oncomplete="PF('confirmacaoExclusao').show()"
 	    					process="@this" update=":frmPesquisa:confirmacaoExclusaoDialog">
-	    				<f:setPropertyActionListener target="#{pesquisaClientesBean.clienteSelecionado}" value="#{cliente}" />
+	    				<f:setPropertyActionListener target="#{pesquisaClientesBean.clienteSelecionado}" value="#{cliente}"/>
 	    			</p:commandButton>
 	    		</p:column>
 	    		
@@ -64,8 +75,138 @@
 	    		<p:button value="Não" onclick="PF('confirmacaoExclusao').hide(); return false;" />
 	    		<p:commandButton value="Sim" oncomplete="PF('confirmacaoExclusao').hide();"
 	    			action="#{pesquisaClientesBean.excluir}" process="@this"
-	    			update=":frmPesquisa:clientesTable" id="yesButton" />
+	    			update=":frmPesquisa:clientesTable" id="yesButton">
+	    		</p:commandButton>
 	    	</p:confirmDialog>
+	    	
+	    	<p:dialog header="Cliente Info" id="clienteDialog" widgetVar="cliDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+	        	<p:outputPanel id="cliDetail" style="text-align:center;">
+		            <p:panelGrid  columns="2" columnClasses="label,value">
+							
+		                <h:outputText value="Nome" />
+		                <h:outputText value="#{pesquisaClientesBean.clienteSelecionado.nome}" />
+		                
+		                <h:outputText value="E-mail" />
+		                <h:outputText value="#{pesquisaClientesBean.clienteSelecionado.email}" />
+		                
+		                <h:outputText value="CPF" />
+		                <h:outputText value="#{pesquisaClientesBean.clienteSelecionado.cpf}" converter="cpfMask"/>
+		                
+		                <h:outputText value="Endereços" />
+		                <p:dataList id="enderecoTable" value="#{pesquisaClientesBean.clienteSelecionado.enderecos}"
+				    		var="endereco" type="ordered" style="text-align:left;">
+				    			#{endereco.cidade}, CEP #{endereco.cep}, #{endereco.logradouro}, n#{endereco.numero}
+				    			 
+				    	</p:dataList>
+		 
+		            </p:panelGrid>
+	        	</p:outputPanel>
+	    	</p:dialog>
     	</h:form>
+    	
+    	<p:dialog header="Editar cliente" widgetVar="dialogEditar" id="editarDialog" 
+			hideEffect="explode">
+			<h:form id="frm">
+			<p:focus context="frm" />
+			<p:growl id="growl" showDetail="true" sticky="true" />
+				
+	    	<p:toolbar style="margin-top: 20px">
+	    		<p:toolbarGroup>
+	    			<p:button value="Voltar" onclick="PF('dialogEditar').hide(); return false;" />
+	    		</p:toolbarGroup>
+	    		<p:toolbarGroup align="right">
+					<p:commandButton value="Salvar" id="botaoSalvar" oncomplete="if (!args.validationFailed){PF('dialogEditar').hide()}"
+	    				action="#{pesquisaClientesBean.salvar}" update="growl" process="@this capaPanelGrid"
+	    				validateClient="false" />
+	    		</p:toolbarGroup>
+	    	</p:toolbar>
+	    	
+	    	<p:panelGrid columns="2" id="capaPanelGrid" style="width: 100%; margin-top: 20px"
+	    			columnClasses="rotulo, campo">
+	    		<p:outputLabel value="Nome" for="nome"/>
+	    		<p:inputText id="nome" size="60" maxlength="80" value="#{pesquisaClientesBean.clienteSelecionado.nome}" />
+	    		
+	    		<p:outputLabel value="E-mail" for="email"/>
+	    		<p:inputText id="email" size="60" maxlength="80" value="#{pesquisaClientesBean.clienteSelecionado.email}" />
+	    		
+	    		<p:outputLabel value="CPF" id="documentoReceitaFederalLabel" 
+	    			for="documentoReceitaFederal"/>
+	    		<p:inputMask id="documentoReceitaFederal" size="14" maxlength="14"
+	    			mask="999.999.999-99" converter="cpfMask" 
+	    			value="#{pesquisaClientesBean.clienteSelecionado.cpf}" >
+    			</p:inputMask>   		
+	    	</p:panelGrid>
+	    	
+	    	<p:commandButton value="Adicionar Endereço" actionListener="#{pesquisaClientesBean.novoEndereco}"
+	    		process="@this" update="enderecoDialog" oncomplete="PF('enderecoDialogWidgetVar').show()"
+	    		style="margin: 10px 0">
+	    		<p:resetInput target="enderecoDialog" />	
+    		</p:commandButton>
+	    		
+	    	<p:dataTable id="enderecoDataTable" value="#{pesquisaClientesBean.clienteSelecionado.enderecos}"
+	    		var="endereco">
+	    		<p:column headerText="Logradouro">
+	    			<h:outputText value="#{endereco.logradouro}" />
+	    		</p:column>
+	    		<p:column headerText="Número" style="width: 100px">
+	    			<h:outputText value="#{endereco.numero}" />
+	    		</p:column>
+	    		<p:column headerText="CEP" style="width: 100px">
+	    			<h:outputText value="#{endereco.cep}" />
+	    		</p:column>
+	    		<p:column headerText="Cidade" style="width: 200px">
+	    			<h:outputText value="#{endereco.cidade}" />
+	    		</p:column>
+	    		<p:column style="width: 100px; text-align: center">
+	    			<p:commandButton icon="ui-icon-pencil" title="Editar"
+	    				process="@this" update=":frm:enderecoPanelGroup"
+	    				onsuccess="PF('enderecoDialogWidgetVar').show()" actionListener="#{pesquisaClientesBean.editarEndereco}">
+	    				<f:setPropertyActionListener target="#{pesquisaClientesBean.endereco}" value="#{endereco}" />
+    				</p:commandButton>
+	    			
+	    			<p:commandButton icon="ui-icon-trash" title="Excluir" process="@this"
+	    				update="enderecoDataTable" action="#{pesquisaClientesBean.excluirEndereco(endereco)}">
+	    			</p:commandButton>
+	    		</p:column>
+	    	</p:dataTable>
+	    		
+	    	<p:dialog header="Endereço" id="enderecoDialog" widgetVar="enderecoDialogWidgetVar" hideEffect="explode" >
+	    		<h:panelGroup id="enderecoPanelGroup">
+	    			<p:messages id="enderecoMessages" autoUpdate="false" />
+	    			
+	    			<h:panelGrid columns="2">
+	    				<p:outputLabel value="Logradouro" for="logradouro" />
+	    				<p:inputText id="logradouro" size="60" maxlength="150" 
+	    					value="#{pesquisaClientesBean.endereco.logradouro}"/>
+	    					
+	    				<p:outputLabel value="Número" for="numero" />
+	    				<p:inputText id="numero" size="10" maxlength="20" 
+	    					value="#{pesquisaClientesBean.endereco.numero}"/>
+	    					
+	    				<p:outputLabel value="CEP" for="cep" />
+	    				<p:inputMask id="cep" size="15" 
+	    					value="#{pesquisaClientesBean.endereco.cep}"
+	    					mask="99999-99"/>
+	    					
+	    				<p:outputLabel value="Cidade" for="cidade" />
+	    				<p:inputText id="cidade" size="40" maxlength="60" 
+	    					value="#{pesquisaClientesBean.endereco.cidade}"/>
+	    					
+	    				<p:outputLabel value="UF" for="uf" />
+	    				<p:inputText id="uf" size="10" maxlength="60" 
+	    					value="#{pesquisaClientesBean.endereco.uf}"/>
+	    					
+	    				<p:outputLabel />
+	    				<p:commandButton value="#{pesquisaClientesBean.editandoEndereco ? 'Salvar' : 'Incluir'}" 
+	    					action="#{pesquisaClientesBean.confirmarEndereco}"
+	    					ignoreAutoUpdate="true"
+	    					process="enderecoPanelGroup" update="enderecoPanelGroup enderecoDataTable"
+	    					oncomplete="if (!args.validationFailed) PF('enderecoDialogWidgetVar').hide()"/>
+	    			</h:panelGrid>
+	    		</h:panelGroup>
+	    	</p:dialog>
+    	</h:form>
+		</p:dialog>
+    	
     </ui:define>
 </ui:composition>

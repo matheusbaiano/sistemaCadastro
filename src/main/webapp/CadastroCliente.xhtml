@@ -6,25 +6,20 @@
 	xmlns:p="http://primefaces.org/ui"
     xmlns:o="http://omnifaces.org/ui">
 
-    <ui:define name="titulo">#{cadastroClienteBean.editando ? 'Edição de cliente' : 'Novo cliente'}</ui:define>
-    
+    <ui:define name="titulo">Novo cliente</ui:define>
     <ui:define name="corpo">
-    	<f:metadata>
-    		<o:viewParam name="cliente" value="#{cadastroClienteBean.cliente}" />
-    		<f:view action="#{cadastroClienteBean.inicializar}" />
-    	</f:metadata>
 
     	<h:form id="frm">
+   	    	<p:remoteCommand name="nomeRemoteCommand" id="idRemoteCommand" action="#{cadastroClienteBean.limpar}" update="enderecoPanelGroup enderecoDataTable" />
 			<p:focus context="frm" />
 			
-	    	<h1>#{cadastroClienteBean.editando ? 'Edição de cliente' : 'Novo cliente'}</h1>
+	    	<h1>Cadastrar cliente</h1>
 	    	
 	    	<p:messages autoUpdate="true" closable="true" />
 	    	
 	    	<p:toolbar style="margin-top: 20px">
 	    		<p:toolbarGroup>
-	    			<p:button value="Novo" outcome="CadastroCliente" />
-	    			<p:commandButton value="Salvar" id="botaoSalvar"
+	    			<p:commandButton value="Cadastrar" id="botaoSalvar"
 	    				action="#{cadastroClienteBean.salvar}" update="@form"
 	    				process="@this capaPanelGrid"
 	    				validateClient="false" />
@@ -45,12 +40,12 @@
 	    		<p:outputLabel value="CPF" id="documentoReceitaFederalLabel" 
 	    			for="documentoReceitaFederal"/>
 	    		<p:inputMask id="documentoReceitaFederal" size="14" maxlength="14"
-	    			mask="999.999.999-99"
+	    			mask="999.999.999-99" converter="cpfMask" 
 	    			value="#{cadastroClienteBean.cliente.cpf}" >
     			</p:inputMask>   		
 	    	</p:panelGrid>
 	    	
-	    	<p:commandButton value="Adicionar Endereço" actionListener="#{cadastroClienteBean.novoEndereco()}"
+	    	<p:commandButton value="Adicionar Endereço" actionListener="#{cadastroClienteBean.novoEndereco}"
 	    		process="@this" update="enderecoDialog" oncomplete="PF('enderecoDialogWidgetVar').show()"
 	    		style="margin: 10px 0">
 	    		<p:resetInput target="enderecoDialog" />	
@@ -73,9 +68,8 @@
 	    		<p:column style="width: 100px; text-align: center">
 	    			<p:commandButton icon="ui-icon-pencil" title="Editar"
 	    				process="@this" update=":frm:enderecoPanelGroup"
-	    				onsuccess="PF('enderecoDialogWidgetVar').show()"
-	    				actionListener="#{cadastroClienteBean.editarEndereco(endereco)}">
-	    				<p:resetInput target="enderecoDialog" />
+	    				onsuccess="PF('enderecoDialogWidgetVar').show()" actionListener="#{cadastroClienteBean.editarEndereco}">
+	    				<f:setPropertyActionListener target="#{cadastroClienteBean.endereco}" value="#{endereco}" />
     				</p:commandButton>
 	    			
 	    			<p:commandButton icon="ui-icon-trash" title="Excluir" process="@this"
@@ -84,7 +78,7 @@
 	    		</p:column>
 	    	</p:dataTable>
 	    		
-	    	<p:dialog header="Inclusão de endereço" id="enderecoDialog" widgetVar="enderecoDialogWidgetVar"
+	    	<p:dialog header="Endereço" id="enderecoDialog" widgetVar="enderecoDialogWidgetVar" hideEffect="explode"
 	    		modal="true">
 	    		<h:panelGroup id="enderecoPanelGroup">
 	    			<p:messages id="enderecoMessages" autoUpdate="false" />
@@ -112,7 +106,7 @@
 	    					value="#{cadastroClienteBean.endereco.uf}"/>
 	    					
 	    				<p:outputLabel />
-	    				<p:commandButton value="#{cadastroClienteBean.editandoEndereco ? 'Alterar' : 'Incluir'}" 
+	    				<p:commandButton value="#{cadastroClienteBean.editandoEndereco ? 'Salvar' : 'Incluir'}" 
 	    					action="#{cadastroClienteBean.confirmarEndereco}"
 	    					ignoreAutoUpdate="true"
 	    					process="enderecoPanelGroup" update="enderecoPanelGroup enderecoDataTable"

@@ -3,32 +3,31 @@ package managedbeans;
 import java.io.Serializable;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.view.ViewScoped;
-import javax.inject.Named;
 import db.ClienteDAO;
 import model.Cliente;
 import model.Endereco;
 import util.jsf.FacesUtil;
 
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class CadastroClienteBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	private Cliente cliente;
-	private Endereco endereco;
-	
+	private Cliente cliente = new Cliente();
+	private Endereco endereco = new Endereco();
+	private Endereco enderecoSelecionado;
 	private boolean editandoEndereco;
 	
 	public void inicializar(){
-		if (cliente == null) {
 			limpar();
-		}
 	}
 	
 	public void limpar() {
 		this.cliente = new Cliente();
+		this.endereco = new Endereco();
 	}
 	
 	public void salvar() {
@@ -43,9 +42,9 @@ public class CadastroClienteBean implements Serializable {
 		this.editandoEndereco = false;
 	}
 	
-	public void editarEndereco(Endereco endereco) {
-		this.endereco = endereco;
+	public void editarEndereco() {
 		this.editandoEndereco = true;
+		this.endereco = enderecoSelecionado;
 	}
 	
 	public void excluirEndereco(Endereco endereco) {
@@ -53,7 +52,7 @@ public class CadastroClienteBean implements Serializable {
 	}
 	
 	public void confirmarEndereco() {
-		if (!this.cliente.getEnderecos().contains(this.endereco)) {
+		if (!this.editandoEndereco) {
 			this.cliente.getEnderecos().add(this.endereco);
 		}
 	}
@@ -74,11 +73,19 @@ public class CadastroClienteBean implements Serializable {
 		this.cliente = cliente;
 	}
 	
-	public boolean isEditando() {
-		return cliente != null && cliente.getId() == null;
+	public Endereco getEnderecoSelecionado() {
+		return enderecoSelecionado;
 	}
-	
+
+	public void setEnderecoSelecionado(Endereco enderecoSelecionado) {
+		this.enderecoSelecionado = enderecoSelecionado;
+	}
+
 	public boolean isEditandoEndereco() {
 		return editandoEndereco;
+	}
+
+	public void setEditandoEndereco(boolean editandoEndereco) {
+		this.editandoEndereco = editandoEndereco;
 	}
 }
