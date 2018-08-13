@@ -19,7 +19,7 @@
 	    				update="@form" />
 	    		</p:toolbarGroup>
 	    		<p:toolbarGroup align="right">
-	    			<p:button value="Novo" outcome="/clientes/CadastroCliente" />
+	    			<p:button value="Novo" outcome="CadastroCliente" />
 	    		</p:toolbarGroup>
 	    	</p:toolbar>
 	    	
@@ -43,11 +43,11 @@
 	    			<h:outputText value="#{cliente.tipo.descricao}"/>
 	    		</p:column>
 	    		<p:column headerText="CPF" style="width: 300px">
-	    			<h:outputText value="#{cliente.documentoReceitaFederal}" converter="cpfCnpjMask"/>
+	    			<h:outputText value="#{cliente.documentoReceitaFederal}"/>
 	    		</p:column>
 	    		
 	    		<p:column style="width: 100px; text-align: center">
-	    			<p:button outcome="/clientes/CadastroCliente" icon="ui-icon-pencil" title="Editar">
+	    			<p:button outcome="CadastroCliente" icon="ui-icon-pencil" title="Editar">
 	    				<f:param name="cliente" value="#{cliente.id}" />
 	    			</p:button>
 	    			<p:commandButton icon="ui-icon-trash" title="Excluir" oncomplete="PF('confirmacaoExclusao').show()"

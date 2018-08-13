@@ -11,7 +11,7 @@
     <ui:define name="corpo">
     	<f:metadata>
     		<o:viewParam name="cliente" value="#{cadastroClienteBean.cliente}" />
-    		<f:viewAction action="#{cadastroClienteBean.inicializar}" />
+    		<f:view action="#{cadastroClienteBean.inicializar}" />
     	</f:metadata>
 
     	<h:form id="frm">
@@ -23,14 +23,14 @@
 	    	
 	    	<p:toolbar style="margin-top: 20px">
 	    		<p:toolbarGroup>
-	    			<p:button value="Novo" outcome="/clientes/CadastroCliente" />
+	    			<p:button value="Novo" outcome="CadastroCliente" />
 	    			<p:commandButton value="Salvar" id="botaoSalvar"
 	    				action="#{cadastroClienteBean.salvar}" update="@form"
 	    				process="@this capaPanelGrid"
 	    				validateClient="false" />
 	    		</p:toolbarGroup>
 	    		<p:toolbarGroup align="right">
-	    			<p:button value="Pesquisa" outcome="/clientes/PesquisaClientes" />
+	    			<p:button value="Pesquisa" outcome="PesquisaClientes" />
 	    		</p:toolbarGroup>
 	    	</p:toolbar>
 	    	
@@ -46,7 +46,6 @@
 	    			for="documentoReceitaFederal"/>
 	    		<p:inputMask id="documentoReceitaFederal" size="14" maxlength="14"
 	    			mask="999.999.999-99"
-	    			converter="cpfCnpjMask" 
 	    			value="#{cadastroClienteBean.cliente.cpf}" >
     			</p:inputMask>   		
 	    	</p:panelGrid>
