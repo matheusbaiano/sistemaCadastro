@@ -21,7 +21,6 @@ public class PesquisaUsuariosBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private UsuarioDAO usuarioDAO = new UsuarioDAO();
 	private UsuarioFilter filtro;
 	private List<Usuario> usuariosFiltrados;
 	private DataTable dataTable;
@@ -33,18 +32,18 @@ public class PesquisaUsuariosBean implements Serializable {
 	}
 
 	public void excluir() {
-		usuarioDAO.deletarUsuario(usuarioSelecionado);
+		UsuarioDAO.getInstance().deletarUsuario(usuarioSelecionado);
 		usuariosFiltrados.remove(usuarioSelecionado);
 		FacesUtil.addInfoMessage("Usuario " + usuarioSelecionado.getNomeUsuario() + " excluído com sucesso.");
 	}
 
 	public void salvar() {
-		usuarioDAO.inserirUsuario(usuarioSelecionado);
+		UsuarioDAO.getInstance().inserirUsuario(usuarioSelecionado);
 		FacesUtil.addSuccessMessage("Usuario " + usuarioSelecionado.getNomeUsuario() + " editado com sucesso.");
 	}
 
 	public void pesquisar() {
-		usuariosFiltrados = usuarioDAO.filtrados(filtro);
+		usuariosFiltrados = UsuarioDAO.getInstance().filtrados(filtro);
 	}
 
 	public List<Usuario> getUsuariosFiltrados() {

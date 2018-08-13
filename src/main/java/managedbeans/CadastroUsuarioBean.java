@@ -19,12 +19,11 @@ public class CadastroUsuarioBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String login;
 	private String senha;
-	private UsuarioDAO usuarioDAO = new UsuarioDAO();
 
 	public boolean verificarDisponibilidadeLogin() {
 		FacesMessage msg = null;
 		boolean retorno;
-		if (usuarioDAO.getUsuario(login)!=null &&usuarioDAO.getUsuario(login).getNomeUsuario().equalsIgnoreCase(this.login)) {
+		if (UsuarioDAO.getInstance().getUsuario(login)!=null &&UsuarioDAO.getInstance().getUsuario(login).getNomeUsuario().equalsIgnoreCase(this.login)) {
 			msg = new FacesMessage("Login já está em uso.");
 			msg.setSeverity(FacesMessage.SEVERITY_WARN);
 			retorno = true;
@@ -39,11 +38,11 @@ public class CadastroUsuarioBean implements Serializable {
 	
 	@Transactional
 	public void cadastrar() {
-		if (usuarioDAO.getUsuario(login)==null) {
+		if (UsuarioDAO.getInstance().getUsuario(login)==null) {
 			Usuario user = new Usuario();
 			user.setNomeUsuario(login);
 			user.setSenha(senha);
-			usuarioDAO.inserirUsuario(user);
+			UsuarioDAO.getInstance().inserirUsuario(user);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Usuário "+user.getNomeUsuario()+" cadastrado!"));
 			login = new String();
 			senha = new String();

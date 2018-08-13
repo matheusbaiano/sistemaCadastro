@@ -22,6 +22,19 @@ public class UsuarioDAO {
 
 	private EntityManagerFactory factory = Persistence.createEntityManagerFactory("SistemaCadastro");
 	private EntityManager em = factory.createEntityManager();
+	private static UsuarioDAO instanceSingleton;
+	
+	private UsuarioDAO(){
+		
+	}
+	
+	public static UsuarioDAO getInstance(){
+		if (instanceSingleton != null) {
+			return instanceSingleton;
+		}
+		instanceSingleton = new UsuarioDAO();
+		return instanceSingleton;
+	}
 
 	public Usuario getUsuario(String nomeUsuario, String senha) {
 

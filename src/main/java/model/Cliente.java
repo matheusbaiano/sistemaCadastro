@@ -7,17 +7,9 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.ManyToAny;
 
 @Entity
 public class Cliente implements Serializable {
@@ -33,9 +25,9 @@ public class Cliente implements Serializable {
 	private String email;
 	@Column(name = "cpf", nullable = false, length = 11)
 	private String cpf;
-	@ManyToOne
-	@JoinColumn(name = "endereco_id", nullable = false)	
-	private Endereco endereco;
+	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Endereco> enderecos = new ArrayList<>();
+	
 	
 	public Long getId() {
 		return id;
@@ -70,15 +62,16 @@ public class Cliente implements Serializable {
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
+
+	public List<Endereco> getEnderecos() {
+		return enderecos;
+	}
+
+	public void setEnderecos(List<Endereco> enderecos) {
+		this.enderecos = enderecos;
+	}
+
 	
-	public Endereco getEndereco() {
-		return endereco;
-	}
-
-	public void setEndereco(Endereco endereco) {
-		this.endereco = endereco;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;

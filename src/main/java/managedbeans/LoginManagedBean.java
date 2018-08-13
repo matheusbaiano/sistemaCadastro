@@ -12,15 +12,14 @@ import model.Usuario;
 @ViewScoped
 public class LoginManagedBean {
 
-	private UsuarioDAO usuarioDAO = new UsuarioDAO();
 	private Usuario usuario = new Usuario();
 
 	public String envia() {
 		Usuario user = new Usuario();
-		user = usuarioDAO.getUsuario(usuario.getNomeUsuario(), usuario.getSenha());
+		user = UsuarioDAO.getInstance().getUsuario(usuario.getNomeUsuario(), usuario.getSenha());
 		if (user == null) {
 			if (usuario.getNomeUsuario().equals("admin") && usuario.getSenha().equals("admin")) {
-				usuarioDAO.inserirUsuario(usuario);
+				UsuarioDAO.getInstance().inserirUsuario(usuario);
 				FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario",
 						usuario.getNomeUsuario());
 				return "/Home";
