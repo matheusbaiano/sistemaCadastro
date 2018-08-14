@@ -16,6 +16,7 @@ import org.primefaces.event.UnselectEvent;
 
 import db.ClienteDAO;
 import model.Cliente;
+import model.ClienteDataModel;
 import model.Endereco;
 import repository.filter.ClienteFilter;
 import util.jsf.FacesUtil;
@@ -28,7 +29,7 @@ public class PesquisaClientesBean implements Serializable {
 	
 	private ClienteFilter filtro;
 	private List<Cliente> clientesFiltrados;
-	
+	private ClienteDataModel dataModel;
 	private Cliente clienteSelecionado;
 	private Endereco enderecoSelecionado;
 	private Endereco endereco;
@@ -41,6 +42,7 @@ public class PesquisaClientesBean implements Serializable {
 	
 	public void pesquisar() {
 		clientesFiltrados = ClienteDAO.getInstance().filtrados(filtro);
+		dataModel = new ClienteDataModel(clientesFiltrados);
 	}
 	
 	public void excluir() {
@@ -134,6 +136,14 @@ public class PesquisaClientesBean implements Serializable {
 
 	public void setTable(DataTable table) {
 		this.table = table;
+	}
+
+	public ClienteDataModel getDataModel() {
+		return dataModel;
+	}
+
+	public void setDataModel(ClienteDataModel dataModel) {
+		this.dataModel = dataModel;
 	}
 	
 }

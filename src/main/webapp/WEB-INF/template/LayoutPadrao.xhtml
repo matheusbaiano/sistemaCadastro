@@ -10,17 +10,22 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title><ui:insert name="titulo">Sistema de Pedidos</ui:insert></title>
 	<h:outputStylesheet library="css" name="sistema.css" />
-	<h:outputScript library="js" name="jquery.maskMoney.js"/>
-    <h:outputScript library="js" name="validadores.js"/>
+	<h:outputScript library="js" name="jquery.maskMoney.js" />
+	<h:outputScript library="js" name="validadores.js" />
 </h:head>
 
 <h:body>
-	<header>
-	<div style="float: left">
-		<p:commandButton title="HOME" outcome="Home">
-		</p:commandButton>
+	<p:ajaxStatus styleClass="ajax-status" onsuccess="configurarMoeda()">
+		<f:facet name="start">
+			<h:graphicImage library="images" name="loading.gif" />
+		</f:facet>
+		<f:facet name="complete">
+			<h:outputText value="" />
+		</f:facet>
+	</p:ajaxStatus>
 
-	</div>
+	<header>
+	<div style="float: left"></div>
 
 	<div style="float: right; margin-right: 110px">
 		<span
@@ -31,10 +36,11 @@
 		<h:form style="display: inline-block">
 			<p:menubar styleClass="menu-sistema">
 				<p:submenu label="Cadastros">
-					<p:menuitem value="Clientes" outcome="PesquisaClientes" onclick="pesquisaClientesBean.limpar" />
+					<p:menuitem value="Clientes" outcome="PesquisaClientes"
+						onclick="pesquisaClientesBean.limpar" />
 					<p:menuitem value="Usuários" outcome="PesquisaUsuarios" />
 					<p:separator />
-					<p:menuitem value="Produtos" />
+					<p:menuitem value="Produtos" outcome="PesquisaProdutos" />
 				</p:submenu>
 				<p:submenu label="Pedidos">
 					<p:menuitem value="Novo pedido" />
@@ -43,7 +49,7 @@
 				<p:submenu label="Relatórios">
 					<p:menuitem value="Pedidos emitidos" />
 				</p:submenu>
-				<p:menuitem value="Sair" outcome="Login"/>
+				<p:menuitem value="Sair" outcome="Login" />
 			</p:menubar>
 		</h:form>
 	</div>
@@ -57,7 +63,19 @@
 	<p:separator style="margin-top: 20px" />
 
 	<footer> JPA e PrimeFaces </footer>
+	<script>
+		function configurarMoeda() {
+			$(".moeda").maskMoney({
+				decimal : ",",
+				thousands : ".",
+				allowZero : true
+			});
+		}
 
+		$(document).ready(function() {
+			configurarMoeda();
+		});
+	</script>
 </h:body>
 
 </html>

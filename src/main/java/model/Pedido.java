@@ -41,12 +41,20 @@ public class Pedido implements Serializable {
 	private Date dataEntrega;
 	@Column(name = "valor_total", nullable = false, precision = 10, scale = 2)
 	private BigDecimal valorTotal = BigDecimal.ZERO;
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false, length = 20)
+	private StatusPedido status = StatusPedido.ORCAMENTO;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "forma_pagamento", nullable = false, length = 20)
+	private FormaPagamento formaPagamento;
 	@ManyToOne
 	@JoinColumn(name = "vendedor_id", nullable = false)
 	private Usuario vendedor;
 	@ManyToOne
 	@JoinColumn(name = "cliente_id", nullable = false)
 	private Cliente cliente;
+	@Embedded
+	private EnderecoEntrega enderecoEntrega;
 	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<ItemPedido> itens = new ArrayList<>();
 
@@ -130,6 +138,30 @@ public class Pedido implements Serializable {
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
+	}
+	
+	public StatusPedido getStatus() {
+		return status;
+	}
+
+	public void setStatus(StatusPedido status) {
+		this.status = status;
+	}
+
+	public FormaPagamento getFormaPagamento() {
+		return formaPagamento;
+	}
+
+	public void setFormaPagamento(FormaPagamento formaPagamento) {
+		this.formaPagamento = formaPagamento;
+	}
+
+	public EnderecoEntrega getEnderecoEntrega() {
+		return enderecoEntrega;
+	}
+
+	public void setEnderecoEntrega(EnderecoEntrega enderecoEntrega) {
+		this.enderecoEntrega = enderecoEntrega;
 	}
 
 	@Override

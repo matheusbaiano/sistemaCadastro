@@ -10,6 +10,7 @@
 		<class>model.Cliente</class>
 		<class>model.Endereco</class>
 		<class>model.ItemPedido</class>
+		<class>model.EnderecoEntrega</class>
 		
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />

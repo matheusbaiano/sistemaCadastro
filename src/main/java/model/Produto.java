@@ -20,15 +20,24 @@ public class Produto implements Serializable {
 	@Column(nullable = false, length = 80)
 	private String nome;
 	@Column(nullable = false, length = 20, unique = true)
+	private String sku;
+	@Column(nullable = false, length = 80, unique = true)
 	private String descricao;
 	@Column(name="valor_unitario", nullable = false, precision = 10, scale = 2)
 	private BigDecimal valorUnitario;
 	@Column(name="quantidade_estoque", nullable = false, length = 5)
 	private Integer quantidadeEstoque;
 
-	
 	public Long getId() {
 		return id;
+	}
+
+	public String getSku() {
+		return sku;
+	}
+
+	public void setSku(String sku) {
+		this.sku = sku;
 	}
 
 	public void setId(Long id) {

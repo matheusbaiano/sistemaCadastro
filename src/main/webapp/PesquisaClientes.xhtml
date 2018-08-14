@@ -11,7 +11,7 @@
     	<h:form id="frmPesquisa">
 	    	<h1>Pesquisa de clientes</h1>
 	    	
-	    	<p:messages autoUpdate="true" closable="true" />
+	    	<p:autoUpdate><p:messages closable="true" /></p:autoUpdate> 
 	    	
 	    	<p:toolbar style="margin-top: 20px">
 	    		<p:toolbarGroup>
@@ -32,10 +32,11 @@
 	    		<p:inputText id="nome" size="60" value="#{pesquisaClientesBean.filtro.nome}" />
 	    	</p:panelGrid>
 	    	
-	    	<p:dataTable id="clientesTable" value="#{pesquisaClientesBean.clientesFiltrados}" var="cliente"
+	    	<p:dataTable id="clientesTable" value="#{pesquisaClientesBean.dataModel}" var="cliente"
 	    		style="margin-top: 20px" emptyMessage="Nenhum cliente encontrado." rows="20"
-	    		paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom">
-
+	    		paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom"
+	    		selection="#{pesquisaClientesBean.clienteSelecionado}" selectionMode="single">
+				<p:ajax event="rowSelect" oncomplete="PF('cliDialog').show()" update=":frmPesquisa:clienteDialog"/>
 	    		<p:column headerText="Nome">
 	    			<h:outputText value="#{cliente.nome}" />
 	    		</p:column>
@@ -47,13 +48,6 @@
 	    		</p:column>
 	    		
 	    		<p:column style="width: 100px; text-align: center">
-	    			<p:commandButton icon="ui-icon-search" title="Exibir"
-						oncomplete="PF('cliDialog').show()" process="@this"
-						update=":frmPesquisa:clienteDialog">
-						<f:setPropertyActionListener
-							target="#{pesquisaClientesBean.clienteSelecionado}"
-							value="#{cliente}" />
-					</p:commandButton>
 	    			<p:commandButton icon="ui-icon-pencil" title="Editar"
 						oncomplete="PF('dialogEditar').show()" process="@this"
 						update=":editarDialog">
@@ -172,7 +166,7 @@
 	    		
 	    	<p:dialog header="Endereço" id="enderecoDialog" widgetVar="enderecoDialogWidgetVar" hideEffect="explode" >
 	    		<h:panelGroup id="enderecoPanelGroup">
-	    			<p:messages id="enderecoMessages" autoUpdate="false" />
+	    			<p:messages id="enderecoMessages"  />
 	    			
 	    			<h:panelGrid columns="2">
 	    				<p:outputLabel value="Logradouro" for="logradouro" />
