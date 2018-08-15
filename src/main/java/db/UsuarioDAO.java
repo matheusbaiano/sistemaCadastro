@@ -15,6 +15,7 @@ import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang3.StringUtils;
 
+import model.Produto;
 import model.Usuario;
 import repository.filter.UsuarioFilter;
 
@@ -47,6 +48,11 @@ public class UsuarioDAO {
 		} catch (NoResultException e) {
 			return null;
 		}
+	}
+	
+	public List<Usuario> vendedores() {
+		return this.em.createQuery("from Usuario", Usuario.class)
+				.getResultList();
 	}
 	
 	public Usuario getUsuario(String nomeUsuario) {
@@ -104,6 +110,10 @@ public class UsuarioDAO {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	public Usuario porId(Long id) {
+		return this.em.find(Usuario.class, id);
 	}
 
 }

@@ -35,7 +35,7 @@ public class SelecaoClienteBean implements Serializable {
 		opcoes.put("resizable", false);
 		opcoes.put("height", 470);
 		
-		RequestContext.getCurrentInstance().openDialog("/dialogos/SelecaoCliente", opcoes, null);
+		RequestContext.getCurrentInstance().openDialog("SelecaoCliente", opcoes, null);
 	}
 	
 	public String getNome() {

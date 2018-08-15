@@ -9,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import service.NegocioException;
+
 @Entity
 public class Produto implements Serializable {
 
@@ -21,7 +23,7 @@ public class Produto implements Serializable {
 	private String nome;
 	@Column(nullable = false, length = 20, unique = true)
 	private String sku;
-	@Column(nullable = false, length = 80, unique = true)
+	@Column(nullable = true, length = 80)
 	private String descricao;
 	@Column(name="valor_unitario", nullable = false, precision = 10, scale = 2)
 	private BigDecimal valorUnitario;
@@ -99,6 +101,21 @@ public class Produto implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+	
+	public void baixarEstoque(Integer quantidade) throws NegocioException {
+		int novaQuantidade = this.getQuantidadeEstoque() - quantidade;
+		
+		if (novaQuantidade < 0) {
+			throw new NegocioException("Não há disponibilidade no estoque de "
+					+ quantidade + " itens do produto " + this.getSku() + ".");
+		}
+		
+		this.setQuantidadeEstoque(novaQuantidade);
+	}
+
+	public void adicionarEstoque(Integer quantidade) {
+		this.setQuantidadeEstoque(getQuantidadeEstoque() + quantidade);
 	}
 
 }

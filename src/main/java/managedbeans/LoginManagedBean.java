@@ -21,7 +21,7 @@ public class LoginManagedBean {
 			if (usuario.getNomeUsuario().equals("admin") && usuario.getSenha().equals("admin")) {
 				UsuarioDAO.getInstance().inserirUsuario(usuario);
 				FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario",
-						usuario.getNomeUsuario());
+						usuario);
 				return "/Home";
 			} else {
 				usuario = new Usuario();
