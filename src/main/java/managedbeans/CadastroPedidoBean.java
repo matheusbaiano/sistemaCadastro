@@ -7,6 +7,8 @@ import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Produces;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+
 import org.apache.commons.lang3.StringUtils;
 import db.ClienteDAO;
 import db.PedidoDAO;
@@ -62,7 +64,7 @@ public class CadastroPedidoBean implements Serializable {
 		}else{
 			limpar();
 		}
-		
+		pedido.setVendedor(UsuarioDAO.getInstance().getUsuario((String)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario")));
 		System.out.println(pedido.getId()+" idpedido");
 		this.vendedores = UsuarioDAO.getInstance().vendedores();
 		this.pedido.adicionarItemVazio();
